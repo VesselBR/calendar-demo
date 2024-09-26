@@ -7,6 +7,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import moment from 'moment-timezone'
 import { useState } from 'react'
 import Select from 'react-select'
+import AgendaView from './AgendaView';
 
 
 export default function Home() {
@@ -44,7 +45,9 @@ export default function Home() {
 
         </div>          
         <div className="col-sm-10">
-
+          <AgendaView
+            date={date}
+          />
         </div>
       </div>
     </div>
