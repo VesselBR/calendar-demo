@@ -1,95 +1,52 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"; // This is a client component
+
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+import moment from 'moment-timezone'
+import { useState } from 'react'
+import Select from 'react-select'
+
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [date, setDate] = useState  (new Date())
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  return (
+    <div>
+      <h1>App Demo</h1>
+      <div className="row">
+        <div className="col-sm-2">
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DateCalendar
+                value={moment.utc(date).tz('America/Sao_Paulo')}
+                onChange={(newValue) => {
+                  setDate(newValue._d)
+                }
+                } />
+            </LocalizationProvider>
+            <p>Profissionais</p>
+            <Select
+              isMulti
+              name="staffs"
+              options={[]}
+              className="basic-multi-select"
+              classNamePrefix="select"
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+          <p>Grupos</p>
+          <Select
+            isMulti
+            name="groups"
+            options={[]}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+
+        </div>          
+        <div className="col-sm-10">
+
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
