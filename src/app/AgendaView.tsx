@@ -3,11 +3,11 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Calendar, momentLocalizer, SlotInfo, Views } from 'react-big-calendar'
 import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddEventModal from './AddEventModal'
 import { Booking, CurrentSlot } from './agenda'
 import { Button } from 'react-bootstrap'
-import { getEvents, getResources } from './fakeData'
+import { getEvents, getResources, MyEvent } from './fakeData'
 export type AgendaViewProps = {
     date: Date
     onChangeDate: (date: Date) => void
@@ -15,12 +15,18 @@ export type AgendaViewProps = {
 
 
 export default function AgendaView(props: AgendaViewProps) {
-    const events = getEvents()
-    const [myEvents, setMyEvents] = useState(events)
+    const [myEvents, setMyEvents] = useState<MyEvent[]>([])
+
 	const [currentSlot, setCurrentSlot] = useState<CurrentSlot | null>(null)
     const [openSlot, setOpenSlot] = useState(false)
 
     const resourceMap = getResources()
+
+    useEffect( () => {
+        const events = getEvents()
+        setMyEvents(events)
+    }, [] )
+
 
     const DnDCalendar = withDragAndDrop(Calendar)
     moment.tz.setDefault('America/Sao_Paulo')
@@ -31,7 +37,7 @@ export default function AgendaView(props: AgendaViewProps) {
         setOpenSlot(false)
     }
 	const onAddEvent = (event :Booking) => {
-        setMyEvents(myEvents => [...myEvents, {start: event.start_at, end: event.end_at, id: event.id!, title: 'Novo'}])            
+        setMyEvents(myEvents => [...myEvents, {start: event.start_at, end: event.end_at, id: event.id!, title: 'Novo', resourceId: event.staff_id}])            
 		handleClose()
 	}
 
@@ -39,8 +45,21 @@ export default function AgendaView(props: AgendaViewProps) {
         <>
         <h1>Agenda</h1>
         <div>
-            <Button onClick={() => setMyEvents([])}
-            />
+            <Button onClick={() => {
+                const events = myEvents.filter( (event) => event.title !== 'RESERVA' )
+                setMyEvents(events)}
+            }>
+            Limpar
+            </Button>
+            <Button onClick={() => {
+                    setOpenSlot(true)
+                    const events = myEvents.filter( (event) => event.title !== 'RESERVA' )
+                    setMyEvents(events)
+        
+                }
+            }>
+            Gravar
+            </Button>            
         </div>
         <DnDCalendar
             date={props.date}
@@ -53,23 +72,31 @@ export default function AgendaView(props: AgendaViewProps) {
             max={new Date(new Date().setHours(20, 0, 0))}            
             selectable
             onNavigate={date => { props.onChangeDate(date) }}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            eventPropGetter={(event :any) => { 
+                let backgroundColor = 'blue' // defaults to blue
+                if (event.title == 'RESERVA') {backgroundColor='black'}
+                const color = 'white'
+                return { style: { backgroundColor, color } }
+            
+             }}
             onSelectSlot={ (event: SlotInfo) => {
                 console.log("On Select slot", event)
-                const currentDate = new Date()
-                const yesterday = new Date(currentDate)
-                yesterday.setDate(yesterday.getDate() - 1)
-                yesterday.setHours(23, 59)
-
-                if (event.start <=  yesterday){ return alert('Não é permitido agendar para datas retroativas') }
                 const resource = resourceMap.find(item => item.id === event.resourceId)
                 if(!resource) {return}
                 const resourceId = resource.id
-                const resourceName = `${resource.id} - ${resource.title}`
+                //const resourceName = `${resource.id} - ${resource.title}`
                 const start_at = event.slots[0]!
                 const end_at = event.slots.at(-1)!
-                setCurrentSlot({ resourceId, resourceName, start_at: new Date(start_at), end_at: new Date(end_at) })
-                setOpenSlot(true)
-                    
+                //setCurrentSlot({ resourceId, resourceName, start_at: new Date(start_at), end_at: new Date(end_at) })
+                //setOpenSlot(true)
+                setMyEvents([...myEvents, {
+                    id: Math.floor(Math.random()*100),
+                    title: 'RESERVA',
+                    resourceId: resourceId,
+                    start: start_at,
+                    end: end_at
+                }])    
             } }            
         />        
         <AddEventModal

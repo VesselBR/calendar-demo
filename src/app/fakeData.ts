@@ -4,7 +4,7 @@ export type Resource = {
     title: string
 }
 
-export type Event = {
+export type MyEvent = {
     id: number
     title: string
     resourceId: number
@@ -30,8 +30,8 @@ export const getResources = () :Resource[] => {
     return resources
 }
 
-export const getEvents = () :Event[] => {
-    const events :Event[] = []
+export const getEvents = () :MyEvent[] => {
+    const events :MyEvent[] = []
     for (let index = 1; index < 10; index++) {
         events.push({
             id: index,
