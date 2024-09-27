@@ -4,9 +4,10 @@ import { Calendar, momentLocalizer, SlotInfo, Views } from 'react-big-calendar'
 import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useState } from 'react'
-import events from "./events"
 import AddEventModal from './AddEventModal'
 import { Booking, CurrentSlot } from './agenda'
+import { Button } from 'react-bootstrap'
+import { getEvents, getResources } from './fakeData'
 export type AgendaViewProps = {
     date: Date
     onChangeDate: (date: Date) => void
@@ -14,11 +15,12 @@ export type AgendaViewProps = {
 
 
 export default function AgendaView(props: AgendaViewProps) {
+    const events = getEvents()
     const [myEvents, setMyEvents] = useState(events)
 	const [currentSlot, setCurrentSlot] = useState<CurrentSlot | null>(null)
     const [openSlot, setOpenSlot] = useState(false)
 
-    const resourceMap = [{id: 1, title: "Eu"}, {id: 2, title: "Outro"}]
+    const resourceMap = getResources()
 
     const DnDCalendar = withDragAndDrop(Calendar)
     moment.tz.setDefault('America/Sao_Paulo')
@@ -36,6 +38,10 @@ export default function AgendaView(props: AgendaViewProps) {
     return (
         <>
         <h1>Agenda</h1>
+        <div>
+            <Button onClick={() => setMyEvents([])}
+            />
+        </div>
         <DnDCalendar
             date={props.date}
             defaultView={Views.DAY}
