@@ -7,6 +7,7 @@ import { useState } from 'react'
 import events from "./events"
 export type AgendaViewProps = {
     date: Date
+    onChangeDate: (date: Date) => void
 }
 
 
@@ -27,7 +28,8 @@ export default function AgendaView(props: AgendaViewProps) {
             events={myEvents}
             views={{day: true, month: true}}
             min={new Date(new Date().setHours(8, 0, 0))}
-            max={new Date(new Date().setHours(20, 0, 0))}
+            max={new Date(new Date().setHours(20, 0, 0))}            
+            onNavigate={date => { props.onChangeDate(date) }}
         />        
         </>
     )

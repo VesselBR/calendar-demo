@@ -47,6 +47,7 @@ export default function Home() {
         <div className="col-sm-10">
           <AgendaView
             date={date}
+            onChangeDate={(date: Date) => setDate(date)}
           />
         </div>
       </div>
