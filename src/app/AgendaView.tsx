@@ -8,6 +8,7 @@ import AddEventModal from './AddEventModal'
 import { Booking, CurrentSlot } from './agenda'
 import { Button } from 'react-bootstrap'
 import { getEvents, getResources, MyEvent } from './fakeData'
+import AddMultipleModal from './AddMultipleModal'
 export type AgendaViewProps = {
     date: Date
     onChangeDate: (date: Date) => void
@@ -99,13 +100,9 @@ export default function AgendaView(props: AgendaViewProps) {
                 }])    
             } }            
         />        
-        <AddEventModal
-                shopId={'1'}
-                slot={currentSlot}
-                agendaAudit={true}
+        <AddMultipleModal
                 open={openSlot}
                 handleClose={handleClose}
-                onAddEvent={onAddEvent}
             />      
 
         </>
