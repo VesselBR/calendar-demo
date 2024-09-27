@@ -1,17 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap'
+import { MyEvent } from './fakeData'
 
 
 export type AddMultipleModalProps = {
 	open: boolean
 	handleClose: () => void
+    events: MyEvent[]
 }
 
 
+type Item = {
+    name: string
+    email: string
+}
+
 const AddMultipleModal = (props: AddMultipleModalProps) => {
 
-    const [formValues, setFormValues] = useState([{ name: "", email : ""}])
+    const [formValues, setFormValues] = useState<Item[]>([])
+
+
+	useEffect(() => {
+        console.log('--use-effect--', props.events)
+		// Execute
+        if(props.events){
+            setFormValues([])            
+            const items = props.events.map( (event) => {
+                return {name: String(event.resourceId), email: String(event.start)}
+            } )
+            setFormValues(items)
+        }            
+	}, [props.open])
+
 
     
     const handleChange = (i :any, e :any) => {
@@ -49,7 +70,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                 <Form onSubmit={handleSubmit}>
                 {formValues.map((element, index) => (
                         <Form key={index} className='d-flex'>
-                                <Form.Label>Name</Form.Label>
+                                <Form.Label>Nome</Form.Label>
                                 <Form.Control type="text"
                                     value={element.name || ""}
                                     onChange={e => handleChange(index, e)}

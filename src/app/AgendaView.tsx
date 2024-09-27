@@ -54,8 +54,6 @@ export default function AgendaView(props: AgendaViewProps) {
             </Button>
             <Button onClick={() => {
                     setOpenSlot(true)
-                    const events = myEvents.filter( (event) => event.title !== 'RESERVA' )
-                    setMyEvents(events)
         
                 }
             }>
@@ -100,11 +98,10 @@ export default function AgendaView(props: AgendaViewProps) {
                 }])    
             } }            
         />        
-        <AddMultipleModal
+        {openSlot && <AddMultipleModal 
                 open={openSlot}
                 handleClose={handleClose}
-            />      
-
+                events={myEvents.filter( (event) => event.title === 'RESERVA' )} />}
         </>
     )
 }
