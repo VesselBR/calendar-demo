@@ -2,21 +2,30 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap'
 import { MyEvent } from './fakeData'
+import { Customer } from './agenda'
+import NewCustomer from './NewCustomer'
+import DatePicker from 'react-datepicker'
 
 
 export type AddMultipleModalProps = {
-	open: boolean
+	shopId: string
+    open: boolean
 	handleClose: () => void
     events: MyEvent[]
 }
 
 
 type Item = {
-    name: string
-    email: string
+    resourceId: string
+    resourceName: string
+    service: string    
+    start: string
+    end: string
 }
 
 const AddMultipleModal = (props: AddMultipleModalProps) => {
+	const [customerId, setCustomerId] = useState<number | undefined>(undefined)
+	const [customers, setCustomers] = useState<Customer[]>([])
 
     const [formValues, setFormValues] = useState<Item[]>([])
 
@@ -27,14 +36,18 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
         if(props.events){
             setFormValues([])            
             const items = props.events.map( (event) => {
-                return {name: String(event.resourceId), email: String(event.start)}
+                
+                return {start: String(event.start), end: String(event.end)}
             } )
             setFormValues(items)
         }            
 	}, [props.open])
 
+	const onNewCustomer = (customer: Customer) => {
+		setCustomers([...customers, customer])
+	}
 
-    
+
     const handleChange = (i :any, e :any) => {
         const newFormValues = [...formValues];
         newFormValues[i][e.target.name] = e.target.value;
@@ -42,7 +55,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
       }
     
     const addFormFields = () => {
-        setFormValues([...formValues, { name: "", email: "" }])
+        setFormValues([...formValues, { start: "", end: "", resourceId: "", resourceName: "", service: "" }])
       }
     
     const removeFormFields = (i :any) => {
@@ -59,6 +72,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
     return (
       <div>
         <Modal
+        size='lg'
         centered
         show={props.open}
         onHide={props.handleClose}
@@ -68,19 +82,51 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
 			</Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
+                <Form.Group>
+							<Container>
+								<Row>
+									<Col sm={8}>
+									<Form.Label>Cliente</Form.Label>
+										<Form.Select
+											value={customerId}
+											onChange={(event) => { 
+												setCustomerId(parseInt(event.target.value))} }
+										>
+											{
+												customers.map((customer) => {
+													return (<option
+														key={customer.id}
+														value={customer.id} >{customer.name}</option>)
+												})
+											}
+										</Form.Select>
+									
+									</Col>
+									<Col sm={4}>
+										<NewCustomer 
+											shopId={props.shopId} 
+											onSubmit={onNewCustomer}
+											>
+										</NewCustomer>
+									</Col>
+								</Row>
+							</Container>
+						</Form.Group>
+                
+                <Form.Label>Horários:</Form.Label>
                 {formValues.map((element, index) => (
                         <Form key={index} className='d-flex'>
-                                <Form.Label>Nome</Form.Label>
+                                <Form.Label>Inicio</Form.Label>
                                 <Form.Control type="text"
-                                    value={element.name || ""}
+                                    value={element.start || ""}
+                                    onChange={e => handleChange(index, e)}
+                                />
+                                <Form.Label>Fim</Form.Label>
+                                <Form.Control
+                                    value={element.end || ""}
                                     onChange={e => handleChange(index, e)}
                                 />
 
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control type="email"
-                                    value={element.email || ""}
-                                    onChange={e => handleChange(index, e)}
-                                />
                                 <Button type='button' className='button' onClick={() => removeFormFields(index)}>
                                     Remover
                                 </Button>

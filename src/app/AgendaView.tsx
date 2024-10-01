@@ -4,7 +4,6 @@ import { Calendar, momentLocalizer, SlotInfo, Views } from 'react-big-calendar'
 import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useEffect, useState } from 'react'
-import AddEventModal from './AddEventModal'
 import { Booking, CurrentSlot } from './agenda'
 import { Button } from 'react-bootstrap'
 import { getEvents, getResources, MyEvent } from './fakeData'
@@ -98,7 +97,8 @@ export default function AgendaView(props: AgendaViewProps) {
                 }])    
             } }            
         />        
-        {openSlot && <AddMultipleModal 
+        {openSlot && <AddMultipleModal
+                shopId='1' 
                 open={openSlot}
                 handleClose={handleClose}
                 events={myEvents.filter( (event) => event.title === 'RESERVA' )} />}
