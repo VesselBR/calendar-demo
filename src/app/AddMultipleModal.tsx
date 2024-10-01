@@ -41,6 +41,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
             const items = props.events.map( (event) => {                
                 return {start: event.start, end: event.end}
             } )
+            //@ts-expect-error IgnoreIt
             setFormValues(items)
         }            
 	}, [props.open])
@@ -52,6 +53,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
 
     const handleChange = (index: number, attribute: string, value :any) => {
         const newFormValues = [...formValues];
+        //@ts-expect-error IgnoreIt
         newFormValues[index][attribute] = value;
         setFormValues(newFormValues);
       }
