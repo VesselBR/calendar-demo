@@ -4,7 +4,6 @@ import { Calendar, momentLocalizer, SlotInfo, Views } from 'react-big-calendar'
 import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useEffect, useState } from 'react'
-import { Booking, CurrentSlot } from './agenda'
 import { Button } from 'react-bootstrap'
 import { getEvents, getResources, MyEvent } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
@@ -16,8 +15,6 @@ export type AgendaViewProps = {
 
 export default function AgendaView(props: AgendaViewProps) {
     const [myEvents, setMyEvents] = useState<MyEvent[]>([])
-
-	const [currentSlot, setCurrentSlot] = useState<CurrentSlot | null>(null)
     const [openSlot, setOpenSlot] = useState(false)
 
     const resourceMap = getResources()
@@ -33,13 +30,9 @@ export default function AgendaView(props: AgendaViewProps) {
     const localizer = momentLocalizer(moment)
 
     const handleClose = () => {
-        setCurrentSlot(null)
         setOpenSlot(false)
     }
-	const onAddEvent = (event :Booking) => {
-        setMyEvents(myEvents => [...myEvents, {start: event.start_at, end: event.end_at, id: event.id!, title: 'Novo', resourceId: event.staff_id}])            
-		handleClose()
-	}
+
 
     return (
         <>
