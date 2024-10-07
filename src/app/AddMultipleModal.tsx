@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap'
-import { MyEvent } from './fakeData'
+import { getResources, MyEvent, Resource } from './fakeData'
 import { Customer } from './agenda'
 import NewCustomer from './NewCustomer'
 import DatePicker from 'react-datepicker'
@@ -18,7 +18,7 @@ export type AddMultipleModalProps = {
 
 
 type Item = {
-    resourceId: string
+    resourceId: number
     resourceName: string
     service: string    
     start: Date | null
@@ -28,7 +28,7 @@ type Item = {
 const AddMultipleModal = (props: AddMultipleModalProps) => {
 	const [customerId, setCustomerId] = useState<number | undefined>(undefined)
 	const [customers, setCustomers] = useState<Customer[]>([])
-
+    const [staffs, setStaffs] = useState<Resource[]>([])
     const [formValues, setFormValues] = useState<Item[]>([])
 	moment.tz.setDefault('America/Sao_Paulo')
 
@@ -36,10 +36,12 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
 	useEffect(() => {
         console.log('--use-effect--', props.events)
 		// Execute
+        const staffs = getResources()
+        setStaffs(staffs)
         if(props.events){
             setFormValues([])            
             const items = props.events.map( (event) => {                
-                return {start: event.start, end: event.end}
+                return {start: event.start, end: event.end, resourceId: event.resourceId}
             } )
             //@ts-expect-error IgnoreIt
             setFormValues(items)
@@ -59,7 +61,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
       }
     
     const addFormFields = () => {
-        setFormValues([...formValues, { start: null, end: null, resourceId: "", resourceName: "", service: "" }])
+        setFormValues([...formValues, { start: null, end: null, resourceId: 0, resourceName: "", service: "" }])
       }
     
     const removeFormFields = (i :any) => {
@@ -120,6 +122,21 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                 <Form.Label>Horários:</Form.Label>
                 {formValues.map((element, index) => (
                         <Form key={index} className='d-flex'>
+                                <Form.Label>Proff.</Form.Label>
+								<Form.Select
+											value={element.resourceId}
+											onChange={(event) => { handleChange(index, 'resourceId', event.target.value) } }
+										>
+											{
+												staffs.map((staff) => {
+													return (<option
+														key={staff.id}
+                                                        selected={ staff.id === element.resourceId }
+                                                        label={staff.title}
+														value={staff.id} ></option>)
+												})
+											}
+								</Form.Select>
                                 <Form.Label>Inicio</Form.Label>
                                 <DatePicker 
 								selected={element.start!} 
