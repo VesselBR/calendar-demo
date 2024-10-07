@@ -29,6 +29,7 @@ export type Service = {
 
 export type Customer = {
     id: number
+    label: string
     name: string
     email: string
     phone: string

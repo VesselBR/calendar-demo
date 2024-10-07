@@ -1,3 +1,4 @@
+import { Customer } from "./agenda"
 
 export type Resource = {
     id: number,
@@ -42,4 +43,19 @@ export const getEvents = () :MyEvent[] => {
         })        
     }
     return events
+
+}
+
+export const getCustomers = () :Customer[] => {
+    const customers :Customer[] = []
+    for (let index = 1; index < 5; index++) {
+        customers.push({
+            id: index,
+            email: `any${index}@teste.com`,
+            phone: `${index}${index}${index} - ${index}${index}${index}`,
+            name: `Cliente ${index}`,
+            label: `Cliente ${index}`
+        })        
+    }
+    return customers
 }

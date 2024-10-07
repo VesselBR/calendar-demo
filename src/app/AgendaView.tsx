@@ -9,6 +9,7 @@ import { getEvents, getResources, MyEvent } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
 export type AgendaViewProps = {
     date: Date
+    customer: number | null
     onChangeDate: (date: Date) => void
 }
 

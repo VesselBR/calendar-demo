@@ -5,13 +5,23 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import moment from 'moment-timezone'
-import { useState } from 'react'
-import Select from 'react-select'
+import { useEffect, useState } from 'react'
+import Select, { SingleValue } from 'react-select'
 import AgendaView from './AgendaView';
+import { Customer } from './agenda';
+import { getCustomers } from './fakeData';
 
 
 export default function Home() {
   const [date, setDate] = useState  (new Date())
+  const [customers, setCustomers] = useState<Customer[]>([])
+  const [selectedCustomer, setSelectedCustomer] = useState<number | null>(null)
+
+
+  useEffect( () => {
+    const customers = getCustomers()
+    setCustomers(customers)
+  }, [] )
 
   return (
     <div>
@@ -45,8 +55,24 @@ export default function Home() {
 
         </div>          
         <div className="col-sm-10">
+        <Select
+            isSearchable
+            name="customers"
+            options={customers}
+            classNamePrefix="select"
+            isClearable
+            onChange={(newVal :SingleValue<Customer> ) => {
+              if (newVal === null) {
+                setSelectedCustomer(null)
+              } else {
+                setSelectedCustomer(newVal.id)
+              }
+            }
+            }
+          />          
           <AgendaView
             date={date}
+            customer={selectedCustomer}
             onChangeDate={(date: Date) => setDate(date)}
           />
         </div>
