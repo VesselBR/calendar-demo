@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
 import AgendaView from './AgendaView';
 import { Customer } from './agenda';
-import { getCustomers } from './fakeData';
+import { getCustomers, getShop } from './fakeData';
 
 
 export default function Home() {
@@ -72,6 +72,7 @@ export default function Home() {
           />          
           <AgendaView
             date={date}
+            shop={getShop()}
             customer={selectedCustomer}
             onChangeDate={(date: Date) => setDate(date)}
           />

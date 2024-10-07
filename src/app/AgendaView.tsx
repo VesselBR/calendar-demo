@@ -5,11 +5,12 @@ import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
-import { getEvents, getResources, MyEvent } from './fakeData'
+import { getEvents, getResources, MyEvent, Shop } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
 import { CustomerView } from './CustomerView'
 export type AgendaViewProps = {
     date: Date
+    shop: Shop
     customer: number | null
     onChangeDate: (date: Date) => void
 }
@@ -18,10 +19,14 @@ export type AgendaViewProps = {
 export default function AgendaView(props: AgendaViewProps) {
     const [myEvents, setMyEvents] = useState<MyEvent[]>([])
     const [openSlot, setOpenSlot] = useState(false)
+    const [viewtype, setViewtype] = useState<View>(Views.DAY)
 
     const resourceMap = getResources()
-    let viewtype: View = Views.DAY
-    if (props.customer) { viewtype = Views.AGENDA }
+    //let viewtype: View = Views.DAY
+    useEffect( () => {
+        if (props.customer) { setViewtype(Views.AGENDA) } else {setViewtype(Views.DAY)}
+    }, [props.customer] )
+
 
     useEffect( () => {
         const events = getEvents()
@@ -37,6 +42,7 @@ export default function AgendaView(props: AgendaViewProps) {
         setOpenSlot(false)
     }
 
+    const isOpen = props.shop.hours[props.date.getDay()].open
 
     return (
         <>
@@ -56,7 +62,12 @@ export default function AgendaView(props: AgendaViewProps) {
             Gravar
             </Button>            
         </div>
-        <DnDCalendar
+
+        {
+            isOpen 
+            ?
+
+            <DnDCalendar
             date={props.date}
             defaultView={viewtype}
             localizer={localizer}
@@ -66,7 +77,11 @@ export default function AgendaView(props: AgendaViewProps) {
             min={new Date(new Date().setHours(8, 0, 0))}
             max={new Date(new Date().setHours(20, 0, 0))}            
             selectable
-            onNavigate={date => { props.onChangeDate(date) }}
+            onNavigate={date => { 
+                props.onChangeDate(date)
+                console.log('onNavigate', date.getDate())
+                //if(date.getDate() === 9){ setViewtype(Views.WORK_WEEK) }
+             }}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             eventPropGetter={(event :any) => { 
                 let backgroundColor = 'blue' // defaults to blue
@@ -94,8 +109,12 @@ export default function AgendaView(props: AgendaViewProps) {
                 }])    
             } }            
         />        
+
+        :
+        <h1> Unidade Fechada </h1>
+        }
         {openSlot && <AddMultipleModal
-                shopId='1' 
+                shopId='1'                
                 open={openSlot}
                 handleClose={handleClose}
                 events={myEvents.filter( (event) => event.title === 'RESERVA' )} />}

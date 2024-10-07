@@ -13,6 +13,18 @@ export type MyEvent = {
     end: Date
 }
 
+export type WorkingHours = {
+    date: number
+    open: boolean
+    start: number
+    end: number
+}
+
+export type Shop = {
+  id: number
+  hours: WorkingHours[]
+}
+
 function getRandomInt(min :number, max :number) :number {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
@@ -59,4 +71,54 @@ export const getCustomers = () :Customer[] => {
         })        
     }
     return customers
+}
+
+export const getShop = () :Shop => {
+    return {
+        id: 1,
+        hours: [
+            {
+                date: 0,
+                open: false,
+                start: 0,
+                end: 0
+            },
+            {
+                date: 1,
+                open: false,
+                start: 0,
+                end: 0
+            },
+            {
+                date: 2,
+                open: true,
+                start: 8,
+                end: 18
+            },
+            {
+                date: 3,
+                open: true,
+                start: 10,
+                end: 20
+            },
+            {
+                date: 4,
+                open: true,
+                start: 8,
+                end: 18
+            },
+            {
+                date: 5,
+                open: true,
+                start:10,
+                end: 22
+            },
+            {
+                date: 6,
+                open: true,
+                start: 9,
+                end: 23
+            }
+        ]
+    }
 }
