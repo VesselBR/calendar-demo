@@ -21,6 +21,10 @@ export default function AgendaView(props: AgendaViewProps) {
     const [openSlot, setOpenSlot] = useState(false)
     const [viewtype, setViewtype] = useState<View>(Views.DAY)
 
+    const isOpen = props.shop.hours[props.date.getDay()].open
+    const startHour = props.shop.hours[props.date.getDay()].start 
+    const endHour = props.shop.hours[props.date.getDay()].end
+
     const resourceMap = getResources()
     //let viewtype: View = Views.DAY
     useEffect( () => {
@@ -42,7 +46,6 @@ export default function AgendaView(props: AgendaViewProps) {
         setOpenSlot(false)
     }
 
-    const isOpen = props.shop.hours[props.date.getDay()].open
 
     return (
         <>
@@ -74,8 +77,8 @@ export default function AgendaView(props: AgendaViewProps) {
             events={myEvents}
             resources={resourceMap}
             views={{ day: true, agenda: CustomerView }}
-            min={new Date(new Date().setHours(8, 0, 0))}
-            max={new Date(new Date().setHours(20, 0, 0))}            
+            min={new Date(new Date().setHours(startHour, 0, 0))}
+            max={new Date(new Date().setHours(endHour, 0, 0))}            
             selectable
             onNavigate={date => { 
                 props.onChangeDate(date)
