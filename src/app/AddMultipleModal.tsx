@@ -122,7 +122,8 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                 <Form.Label>Horários:</Form.Label>
                 {formValues.map((element, index) => (
                         <Form key={index} className='d-flex'>
-                                <Form.Label>Proff.</Form.Label>
+                            <Form.Group>
+                                <Form.Label>Proffissional</Form.Label>
 								<Form.Select
 											value={element.resourceId}
 											onChange={(event) => { handleChange(index, 'resourceId', event.target.value) } }
@@ -137,28 +138,39 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
 												})
 											}
 								</Form.Select>
+                            </Form.Group>
+                            <Form.Group>
                                 <Form.Label>Inicio</Form.Label>
+                                <Form.Group>
                                 <DatePicker 
-								selected={element.start!} 
-								showTimeSelect
-								showTimeSelectOnly
-								timeIntervals={30}
-								timeCaption="Time"
-								dateFormat="hh:mm"
-								onChange={e => handleChange(index, 'start', e)}  
-                                />
-                                
-                                <Form.Label>Fim</Form.Label>
-                                <DatePicker 
-								selected={element.end!} 
-								showTimeSelect
-								showTimeSelectOnly
-								timeIntervals={30}
-								timeCaption="Time"
-								dateFormat="hh:mm"
-								onChange={e => handleChange(index, 'end', e)}  
-                                />
+                                    className='form-control'
+                                    selected={element.start!} 
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={30}
+                                    timeCaption="Time"
+                                    dateFormat="hh:mm"
+                                    onChange={e => handleChange(index, 'start', e)}  
+                                    />
 
+                                </Form.Group>
+                                
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Fim</Form.Label>
+                                <Form.Group>
+                                    <DatePicker 
+                                    className='form-control'
+                                    selected={element.end!} 
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={30}
+                                    timeCaption="Time"
+                                    dateFormat="hh:mm"
+                                    onChange={e => handleChange(index, 'end', e)}  
+                                    />
+                                </Form.Group>
+                            </Form.Group>
                                 <Button type='button' className='button' onClick={() => removeFormFields(index)}>
                                     Remover
                                 </Button>
