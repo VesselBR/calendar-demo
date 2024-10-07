@@ -1,12 +1,13 @@
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { Calendar, momentLocalizer, SlotInfo, Views } from 'react-big-calendar'
+import { Calendar, momentLocalizer, SlotInfo, View, Views } from 'react-big-calendar'
 import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { getEvents, getResources, MyEvent } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
+import { CustomerView } from './CustomerView'
 export type AgendaViewProps = {
     date: Date
     customer: number | null
@@ -19,6 +20,8 @@ export default function AgendaView(props: AgendaViewProps) {
     const [openSlot, setOpenSlot] = useState(false)
 
     const resourceMap = getResources()
+    let viewtype: View = Views.DAY
+    if (props.customer) { viewtype = Views.AGENDA }
 
     useEffect( () => {
         const events = getEvents()
@@ -55,11 +58,11 @@ export default function AgendaView(props: AgendaViewProps) {
         </div>
         <DnDCalendar
             date={props.date}
-            defaultView={Views.DAY}
+            defaultView={viewtype}
             localizer={localizer}
             events={myEvents}
             resources={resourceMap}
-            views={{day: true, month: true}}
+            views={{ day: true, agenda: CustomerView }}
             min={new Date(new Date().setHours(8, 0, 0))}
             max={new Date(new Date().setHours(20, 0, 0))}            
             selectable

@@ -51,6 +51,7 @@ export const getCustomers = () :Customer[] => {
     for (let index = 1; index < 5; index++) {
         customers.push({
             id: index,
+            value: index,
             email: `any${index}@teste.com`,
             phone: `${index}${index}${index} - ${index}${index}${index}`,
             name: `Cliente ${index}`,

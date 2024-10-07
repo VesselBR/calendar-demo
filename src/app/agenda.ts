@@ -13,6 +13,8 @@ export type Group = {
 
 export type Staff = {
     id: number
+    value: number
+    label: string
     name: string
     nickname: string
     avatar: string
@@ -29,6 +31,7 @@ export type Service = {
 
 export type Customer = {
     id: number
+    value: number
     label: string
     name: string
     email: string
@@ -57,3 +60,12 @@ export type Booking = {
     comanda_id?: number
   }
   
+  export type AgendaEvent = {
+    id: number
+    title: string
+    start: Date
+    end: Date
+    resourceId: number
+    customer_id?: number
+    comandaId?: number
+}
