@@ -1,4 +1,4 @@
-import { Customer } from "./agenda"
+import { Customer, Service } from "./agenda"
 
 export type Resource = {
     id: number,
@@ -9,6 +9,7 @@ export type MyEvent = {
     id: number
     title: string
     resourceId: number
+    serviceId: number
     start: Date
     end: Date
 }
@@ -50,11 +51,23 @@ export const getEvents = () :MyEvent[] => {
             id: index,
             title: `Evento ${index}`,
             resourceId: getRandomInt(1, 5),
+            serviceId:  getRandomInt(1, 5),
             start: new Date( new Date().setHours(getRandomInt(8, 12)) ),
             end: new Date( new Date().setHours(getRandomInt(13, 16)) ),
         })        
     }
     return events
+}
+
+export const getServices = () :Service[] => {
+    const list :Service[] = []
+    for (let index = 1; index < 5; index++) {
+        list.push({
+            id: index,
+            name: `Serviço ${index}`
+        })        
+    }
+    return list
 
 }
 

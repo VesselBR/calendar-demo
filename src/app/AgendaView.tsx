@@ -107,6 +107,7 @@ export default function AgendaView(props: AgendaViewProps) {
                     id: Math.floor(Math.random()*100),
                     title: 'RESERVA',
                     resourceId: resourceId,
+                    serviceId: 0,
                     start: start_at,
                     end: end_at
                 }])    
