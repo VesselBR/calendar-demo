@@ -120,6 +120,12 @@ export default function AgendaView(props: AgendaViewProps) {
                 shopId='1'                
                 open={openSlot}
                 handleClose={handleClose}
+                onSubmit={(eventList :MyEvent[]) => {
+                    // Clear the Reservations
+                    const list = myEvents.filter( (event) => event.title !== 'RESERVA' )
+                    eventList.forEach(event => { list.push(event) })
+                    setMyEvents(list)
+                } }
                 events={myEvents.filter( (event) => event.title === 'RESERVA' )} />}
         </>
     )

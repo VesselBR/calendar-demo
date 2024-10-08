@@ -13,6 +13,7 @@ export type AddMultipleModalProps = {
 	shopId: string
     open: boolean
 	handleClose: () => void
+    onSubmit: (events :MyEvent[]) => void
     events: MyEvent[]
 }
 
@@ -29,7 +30,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
 	const [customerId, setCustomerId] = useState<number | undefined>(undefined)
 	const [customers, setCustomers] = useState<Customer[]>([])
     const [staffs, setStaffs] = useState<Resource[]>([])
-    const [formValues, setFormValues] = useState<Item[]>([])
+    const [formValues, setFormValues] = useState<MyEvent[]>([])
 	moment.tz.setDefault('America/Sao_Paulo')
 
 
@@ -61,7 +62,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
       }
     
     const addFormFields = () => {
-        setFormValues([...formValues, { start: null, end: null, resourceId: 0, resourceName: "", service: "" }])
+        setFormValues([...formValues, { start: new Date, end: new Date, resourceId: 0, id: 0, title: 'Reserva' }])
       }
     
     const removeFormFields = (i :any) => {
@@ -186,7 +187,13 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                             </Button>
                             </Col>
                             <Col xs={4} >
-                                <Button className="button submit" type="submit">
+                                <Button 
+                                className="button submit" 
+                                onClick={ () => {
+                                    props.onSubmit(formValues)
+                                    props.handleClose()
+                                } }
+                                type="submit">
                                     Submit
                                 </Button>
                             </Col>
