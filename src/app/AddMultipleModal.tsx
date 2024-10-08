@@ -52,11 +52,15 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
         const newFormValues = [...formValues];
         //@ts-expect-error IgnoreIt
         newFormValues[index][attribute] = value;
+        if (attribute === 'resourceId'){ 
+            newFormValues[index][attribute] = parseInt(value)
+
+         }
         setFormValues(newFormValues);
       }
     
     const addFormFields = () => {
-        setFormValues([...formValues, { start: new Date, end: new Date, resourceId: 0, serviceId: 0, id: 0, title: 'Reserva' }])
+        setFormValues([...formValues, { start: new Date, end: new Date, resourceId: 0, serviceId: 0, id: 0, title: '' }])
       }
     
     const removeFormFields = (i :any) => {
@@ -121,6 +125,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                                 <Form.Label>Proffissional</Form.Label>
 								<Form.Select
 											value={element.resourceId}
+                                            id={`staff-${index}`}
 											onChange={(event) => { handleChange(index, 'resourceId', event.target.value) } }
 										>
 											{
@@ -138,17 +143,26 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                                 <Form.Label>Serviço</Form.Label>
 								<Form.Select
 											value={element.serviceId}
+                                            id={`service-${index}`}
 											onChange={(event) => { handleChange(index, 'serviceId', event.target.value) } }
+                                            onFocus={()=> {
+                                                console.log('on focus', element.resourceId )
+                                                const staff = document.getElementById(`staff-${index}`)
+                                                const service_select = document.getElementById(`service-${index}`)
+                                                if(!service_select){return}
+                                                console.log("staff", staff)
+                                                services.forEach(service => {
+                                                    if(service.id <3){
+                                                      const opt = document.createElement("option")
+                                                      opt.text = service.name
+                                                      opt.value = String(service.id)
+                                                      console.log('option', opt)
+                                                      service_select.add(opt)
+                                                    }
+                                                } )
+                                            } 
+                                        }
 										>
-											{
-												services.map((service) => {
-													return (<option
-														key={service.id}
-                                                        selected={ service.id === element.serviceId }
-                                                        label={service.name}
-														value={service.id} ></option>)
-												})
-											}
 								</Form.Select>
                             </Form.Group>
 
@@ -156,6 +170,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                                 <Form.Label>Inicio</Form.Label>
                                 <Form.Group>
                                 <DatePicker 
+                                    id={`start-${index}`}
                                     className='form-control'
                                     selected={element.start!} 
                                     showTimeSelect
@@ -173,6 +188,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                                 <Form.Label>Fim</Form.Label>
                                 <Form.Group>
                                     <DatePicker 
+                                    id={`end-${index}`}
                                     className='form-control'
                                     selected={element.end!} 
                                     showTimeSelect
