@@ -1,26 +1,36 @@
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { Calendar, momentLocalizer, SlotInfo, Views } from 'react-big-calendar'
+import { Calendar, momentLocalizer, SlotInfo, View, Views } from 'react-big-calendar'
 import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useEffect, useState } from 'react'
-import { Booking, CurrentSlot } from './agenda'
 import { Button } from 'react-bootstrap'
-import { getEvents, getResources, MyEvent } from './fakeData'
+import { getEvents, getResources, MyEvent, Shop } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
+import { CustomerView } from './CustomerView'
 export type AgendaViewProps = {
     date: Date
+    shop: Shop
+    customer: number | null
     onChangeDate: (date: Date) => void
 }
 
 
 export default function AgendaView(props: AgendaViewProps) {
     const [myEvents, setMyEvents] = useState<MyEvent[]>([])
-
-	const [currentSlot, setCurrentSlot] = useState<CurrentSlot | null>(null)
     const [openSlot, setOpenSlot] = useState(false)
+    const [viewtype, setViewtype] = useState<View>(Views.DAY)
+
+    const isOpen = props.shop.hours[props.date.getDay()].open
+    const startHour = props.shop.hours[props.date.getDay()].start 
+    const endHour = props.shop.hours[props.date.getDay()].end
 
     const resourceMap = getResources()
+    //let viewtype: View = Views.DAY
+    useEffect( () => {
+        if (props.customer) { setViewtype(Views.AGENDA) } else {setViewtype(Views.DAY)}
+    }, [props.customer] )
+
 
     useEffect( () => {
         const events = getEvents()
@@ -33,13 +43,9 @@ export default function AgendaView(props: AgendaViewProps) {
     const localizer = momentLocalizer(moment)
 
     const handleClose = () => {
-        setCurrentSlot(null)
         setOpenSlot(false)
     }
-	const onAddEvent = (event :Booking) => {
-        setMyEvents(myEvents => [...myEvents, {start: event.start_at, end: event.end_at, id: event.id!, title: 'Novo', resourceId: event.staff_id}])            
-		handleClose()
-	}
+
 
     return (
         <>
@@ -59,17 +65,26 @@ export default function AgendaView(props: AgendaViewProps) {
             Gravar
             </Button>            
         </div>
-        <DnDCalendar
+
+        {
+            isOpen 
+            ?
+
+            <DnDCalendar
             date={props.date}
-            defaultView={Views.DAY}
+            defaultView={viewtype}
             localizer={localizer}
             events={myEvents}
             resources={resourceMap}
-            views={{day: true, month: true}}
-            min={new Date(new Date().setHours(8, 0, 0))}
-            max={new Date(new Date().setHours(20, 0, 0))}            
+            views={{ day: true, agenda: CustomerView }}
+            min={new Date(new Date().setHours(startHour, 0, 0))}
+            max={new Date(new Date().setHours(endHour, 0, 0))}            
             selectable
-            onNavigate={date => { props.onChangeDate(date) }}
+            onNavigate={date => { 
+                props.onChangeDate(date)
+                console.log('onNavigate', date.getDate())
+                //if(date.getDate() === 9){ setViewtype(Views.WORK_WEEK) }
+             }}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             eventPropGetter={(event :any) => { 
                 let backgroundColor = 'blue' // defaults to blue
@@ -92,15 +107,26 @@ export default function AgendaView(props: AgendaViewProps) {
                     id: Math.floor(Math.random()*100),
                     title: 'RESERVA',
                     resourceId: resourceId,
+                    serviceId: 0,
                     start: start_at,
                     end: end_at
                 }])    
             } }            
         />        
+
+        :
+        <h1> Unidade Fechada </h1>
+        }
         {openSlot && <AddMultipleModal
-                shopId='1' 
+                shopId='1'                
                 open={openSlot}
                 handleClose={handleClose}
+                onSubmit={(eventList :MyEvent[]) => {
+                    // Clear the Reservations
+                    const list = myEvents.filter( (event) => event.title !== 'RESERVA' )
+                    eventList.forEach(event => { list.push(event) })
+                    setMyEvents(list)
+                } }
                 events={myEvents.filter( (event) => event.title === 'RESERVA' )} />}
         </>
     )
