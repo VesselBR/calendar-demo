@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { getEvents, getResources, MyEvent, Shop } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
-import { CustomerView } from './CustomerView'
 export type AgendaViewProps = {
     date: Date
     shop: Shop
@@ -46,6 +45,24 @@ export default function AgendaView(props: AgendaViewProps) {
         setOpenSlot(false)
     }
 
+const CustomTaskView = ( {events, ...others} ) => {
+    
+    const filter = events.filter(event => event.customerId === props.customer )
+    return (
+    <div className="custom-task-view">
+      {filter.map(event => (
+        <div key={event.id} className={`task ${event.type}`}>
+          <h3>{props.customer}</h3>
+          <p>Responsável: {event.responsible}</p>
+          <p>Prazo: {new Date(event.end).toLocaleDateString()}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+CustomTaskView.title = (date, { localizer }) => {
+    return 'Titulo'
+  }
 
     return (
         <>
@@ -76,10 +93,12 @@ export default function AgendaView(props: AgendaViewProps) {
             localizer={localizer}
             events={myEvents}
             resources={resourceMap}
-            views={{ day: true, agenda: CustomerView }}
+            views={{ day: true, agenda: CustomTaskView    }  }
             min={new Date(new Date().setHours(startHour, 0, 0))}
             max={new Date(new Date().setHours(endHour, 0, 0))}            
             selectable
+            components={{
+            }}
             onNavigate={date => { 
                 props.onChangeDate(date)
                 console.log('onNavigate', date.getDate())
@@ -90,8 +109,7 @@ export default function AgendaView(props: AgendaViewProps) {
                 let backgroundColor = 'blue' // defaults to blue
                 if (event.title == 'RESERVA') {backgroundColor='black'}
                 const color = 'white'
-                return { style: { backgroundColor, color } }
-            
+                return { style: { backgroundColor, color } }            
              }}
             onSelectSlot={ (event: SlotInfo) => {
                 console.log("On Select slot", event)
@@ -108,6 +126,7 @@ export default function AgendaView(props: AgendaViewProps) {
                     title: 'RESERVA',
                     resourceId: resourceId,
                     serviceId: 0,
+                    customerId: 0,
                     start: start_at,
                     end: end_at
                 }])    
