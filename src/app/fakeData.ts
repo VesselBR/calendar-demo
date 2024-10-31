@@ -8,6 +8,7 @@ export type Resource = {
 export type MyEvent = {
     id: number
     title: string
+    customerId: number
     resourceId: number
     serviceId: number
     start: Date
@@ -52,6 +53,23 @@ export const getEvents = () :MyEvent[] => {
             title: `Evento ${index}`,
             resourceId: getRandomInt(1, 5),
             serviceId:  getRandomInt(1, 5),
+            customerId: getRandomInt(1, 5),
+            start: new Date( new Date().setHours(getRandomInt(8, 12)) ),
+            end: new Date( new Date().setHours(getRandomInt(13, 16)) ),
+        })        
+    }
+    return events
+}
+
+export const getCustomerEvents = (customerId: number) :MyEvent[] => {
+    const events :MyEvent[] = []
+    for (let index = 1; index < 10; index++) {
+        events.push({
+            id: index,
+            title: `Evento ${index}`,
+            resourceId: getRandomInt(1, 5),
+            serviceId:  getRandomInt(1, 5),
+            customerId: customerId,
             start: new Date( new Date().setHours(getRandomInt(8, 12)) ),
             end: new Date( new Date().setHours(getRandomInt(13, 16)) ),
         })        
