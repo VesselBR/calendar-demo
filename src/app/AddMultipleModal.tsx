@@ -60,7 +60,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
       }
     
     const addFormFields = () => {
-        setFormValues([...formValues, { start: new Date, end: new Date, resourceId: 0, serviceId: 0, id: 0, title: '' }])
+        setFormValues([...formValues, { start: new Date, end: new Date, customerId: 0, resourceId: 0, serviceId: 0, id: 0, title: '' }])
       }
     
     const removeFormFields = (i :any) => {
@@ -148,7 +148,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                                             onFocus={()=> {
                                                 console.log('on focus', element.resourceId )
                                                 const staff = document.getElementById(`staff-${index}`)
-                                                const service_select = document.getElementById(`service-${index}`)
+                                                const service_select  = document.getElementById(`service-${index}`) as HTMLSelectElement
                                                 if(!service_select){return}
                                                 console.log("staff", staff)
                                                 services.forEach(service => {

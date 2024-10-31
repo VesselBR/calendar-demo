@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ComponentType } from 'react'
 import * as dates from 'date-arithmetic'
-import dayjs from 'dayjs'
 import { ViewStatic } from 'react-big-calendar'
 
 type ClosedViewProps = {

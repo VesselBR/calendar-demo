@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { getEvents, getResources, MyEvent, Shop } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
+import { createCustomComponent } from './CustomerView'
 export type AgendaViewProps = {
     date: Date
     shop: Shop
@@ -18,18 +19,19 @@ export type AgendaViewProps = {
 export default function AgendaView(props: AgendaViewProps) {
     const [myEvents, setMyEvents] = useState<MyEvent[]>([])
     const [openSlot, setOpenSlot] = useState(false)
-    const [viewtype, setViewtype] = useState<View>(Views.DAY)
+    //const [viewtype, setViewtype] = useState<View>(Views.DAY)
 
     const isOpen = props.shop.hours[props.date.getDay()].open
     const startHour = props.shop.hours[props.date.getDay()].start 
     const endHour = props.shop.hours[props.date.getDay()].end
 
     const resourceMap = getResources()
-    //let viewtype: View = Views.DAY
-    useEffect( () => {
-        if (props.customer) { setViewtype(Views.AGENDA) } else {setViewtype(Views.DAY)}
-    }, [props.customer] )
+    let viewtype: View = Views.DAY
+    if (props.customer) { viewtype = Views.AGENDA } 
 
+    const customerView = createCustomComponent(props.customer, props)
+
+    
 
     useEffect( () => {
         const events = getEvents()
@@ -44,25 +46,6 @@ export default function AgendaView(props: AgendaViewProps) {
     const handleClose = () => {
         setOpenSlot(false)
     }
-
-const CustomTaskView = ( {events, ...others} ) => {
-    
-    const filter = events.filter(event => event.customerId === props.customer )
-    return (
-    <div className="custom-task-view">
-      {filter.map(event => (
-        <div key={event.id} className={`task ${event.type}`}>
-          <h3>{props.customer}</h3>
-          <p>Responsável: {event.responsible}</p>
-          <p>Prazo: {new Date(event.end).toLocaleDateString()}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
-CustomTaskView.title = (date, { localizer }) => {
-    return 'Titulo'
-  }
 
     return (
         <>
@@ -93,7 +76,7 @@ CustomTaskView.title = (date, { localizer }) => {
             localizer={localizer}
             events={myEvents}
             resources={resourceMap}
-            views={{ day: true, agenda: CustomTaskView    }  }
+            views={{ day: true, agenda: customerView    }  }
             min={new Date(new Date().setHours(startHour, 0, 0))}
             max={new Date(new Date().setHours(endHour, 0, 0))}            
             selectable
