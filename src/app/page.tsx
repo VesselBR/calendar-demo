@@ -37,6 +37,9 @@ export default function Home() {
                 value={moment.utc(date).tz('America/Sao_Paulo')}
                 onChange={(newValue) => {
                   setDate(newValue._d)
+                  const events = getEvents()
+                  setMyEvents(events)
+              
                 }
                 } />
             </LocalizationProvider>
@@ -79,7 +82,11 @@ export default function Home() {
             date={date}
             shop={getShop()}
             customer={selectedCustomer}
-            onChangeDate={(date: Date) => setDate(date)}
+            onChangeDate={(date: Date) => {
+              setDate(date)
+              const events = getEvents()
+              setMyEvents(events)
+            } }
             onSetEvents={ (props) => { setMyEvents(props) } }
           />
         </div>

@@ -73,6 +73,7 @@ export default function AgendaView(props: AgendaViewProps) {
             views={{ day: true, agenda: customerView    }  }
             min={new Date(new Date().setHours(startHour, 0, 0))}
             max={new Date(new Date().setHours(endHour, 0, 0))}            
+        
             selectable
             components={{
             }}
@@ -126,6 +127,7 @@ export default function AgendaView(props: AgendaViewProps) {
                     props.onSetEvents(list)
                 } }
                 events={props.myEvents.filter( (event) => event.title === 'RESERVA' )} />}
+                
         </>
     )
 }
