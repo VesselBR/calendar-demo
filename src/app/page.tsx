@@ -9,10 +9,11 @@ import { useEffect, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
 import AgendaView from './AgendaView';
 import { Customer } from './agenda';
-import { getCustomers, getShop } from './fakeData';
+import { getCustomers, getEvents, getShop, MyEvent } from './fakeData';
 
 
 export default function Home() {
+  const [myEvents, setMyEvents] = useState<MyEvent[]>([])
   const [date, setDate] = useState  (new Date())
   const [customers, setCustomers] = useState<Customer[]>([])
   const [selectedCustomer, setSelectedCustomer] = useState<number | null>(null)
@@ -21,6 +22,9 @@ export default function Home() {
   useEffect( () => {
     const customers = getCustomers()
     setCustomers(customers)
+    const events = getEvents()
+    setMyEvents(events)
+
   }, [] )
 
   return (
@@ -71,10 +75,12 @@ export default function Home() {
             }
           />          
           <AgendaView
+            myEvents={myEvents}
             date={date}
             shop={getShop()}
             customer={selectedCustomer}
             onChangeDate={(date: Date) => setDate(date)}
+            onSetEvents={ (props) => { setMyEvents(props) } }
           />
         </div>
       </div>

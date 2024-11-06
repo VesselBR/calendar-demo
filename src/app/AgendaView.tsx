@@ -3,21 +3,23 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Calendar, momentLocalizer, SlotInfo, View, Views } from 'react-big-calendar'
 import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from 'react-bootstrap'
-import { getEvents, getResources, MyEvent, Shop } from './fakeData'
+import { getResources, MyEvent, Shop } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
 import { createCustomComponent } from './CustomerView'
+
 export type AgendaViewProps = {
     date: Date
+    myEvents: MyEvent[]
     shop: Shop
     customer: number | null
     onChangeDate: (date: Date) => void
+    onSetEvents: (events: MyEvent[]) => void
 }
 
 
 export default function AgendaView(props: AgendaViewProps) {
-    const [myEvents, setMyEvents] = useState<MyEvent[]>([])
     const [openSlot, setOpenSlot] = useState(false)
     //const [viewtype, setViewtype] = useState<View>(Views.DAY)
 
@@ -30,14 +32,6 @@ export default function AgendaView(props: AgendaViewProps) {
     if (props.customer) { viewtype = Views.AGENDA } 
 
     const customerView = createCustomComponent(props.customer, props)
-
-    
-
-    useEffect( () => {
-        const events = getEvents()
-        setMyEvents(events)
-    }, [] )
-
 
     const DnDCalendar = withDragAndDrop(Calendar)
     moment.tz.setDefault('America/Sao_Paulo')
@@ -52,8 +46,8 @@ export default function AgendaView(props: AgendaViewProps) {
         <h1>Agenda</h1>
         <div>
             <Button onClick={() => {
-                const events = myEvents.filter( (event) => event.title !== 'RESERVA' )
-                setMyEvents(events)}
+                const events = props.myEvents.filter( (event) => event.title !== 'RESERVA' )
+                props.onSetEvents(events) }
             }>
             Limpar
             </Button>
@@ -74,7 +68,7 @@ export default function AgendaView(props: AgendaViewProps) {
             date={props.date}
             defaultView={viewtype}
             localizer={localizer}
-            events={myEvents}
+            events={props.myEvents}
             resources={resourceMap}
             views={{ day: true, agenda: customerView    }  }
             min={new Date(new Date().setHours(startHour, 0, 0))}
@@ -104,7 +98,7 @@ export default function AgendaView(props: AgendaViewProps) {
                 const end_at = event.slots.at(-1)!
                 //setCurrentSlot({ resourceId, resourceName, start_at: new Date(start_at), end_at: new Date(end_at) })
                 //setOpenSlot(true)
-                setMyEvents([...myEvents, {
+                const aevent :MyEvent = {
                     id: Math.floor(Math.random()*100),
                     title: 'RESERVA',
                     resourceId: resourceId,
@@ -112,7 +106,8 @@ export default function AgendaView(props: AgendaViewProps) {
                     customerId: 0,
                     start: start_at,
                     end: end_at
-                }])    
+                }
+                props.onSetEvents([...props.myEvents, aevent])    
             } }            
         />        
 
@@ -125,11 +120,12 @@ export default function AgendaView(props: AgendaViewProps) {
                 handleClose={handleClose}
                 onSubmit={(eventList :MyEvent[]) => {
                     // Clear the Reservations
-                    const list = myEvents.filter( (event) => event.title !== 'RESERVA' )
+                    const list = props.myEvents.filter( (event) => event.title !== 'RESERVA' )
                     eventList.forEach(event => { list.push(event) })
-                    setMyEvents(list)
+                    //setMyEvents(list)
+                    props.onSetEvents(list)
                 } }
-                events={myEvents.filter( (event) => event.title === 'RESERVA' )} />}
+                events={props.myEvents.filter( (event) => event.title === 'RESERVA' )} />}
         </>
     )
 }
