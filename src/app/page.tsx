@@ -1,10 +1,8 @@
 "use client"; // This is a client component
-
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+import { ptBR } from "react-day-picker/locale";
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
-import moment from 'moment-timezone'
 import { useEffect, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
 import AgendaView from './AgendaView';
@@ -32,17 +30,12 @@ export default function Home() {
       <h1>App Demo</h1>
       <div className="row">
         <div className="col-sm-2">
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-              <DateCalendar
-                value={moment.utc(date).tz('America/Sao_Paulo')}
-                onChange={(newValue) => {
-                  setDate(newValue._d)
-                  const events = getEvents()
-                  setMyEvents(events)
-              
-                }
-                } />
-            </LocalizationProvider>
+            <DayPicker
+                mode="single"
+                locale={ptBR}
+                selected={date}
+                onSelect={(newvalue) => { setDate(newvalue!) }}
+            />
             <p>Profissionais</p>
             <Select
               isMulti
