@@ -8,6 +8,8 @@ import Select, { SingleValue } from 'react-select'
 import AgendaView from './AgendaView';
 import { Customer } from './agenda';
 import { getCustomers, getEvents, getShop, MyEvent } from './fakeData';
+import  MyComponent  from "./MyComponent";
+import { WebsocketProvider } from "./WebsocketProvider";
 
 
 export default function Home() {
@@ -69,19 +71,22 @@ export default function Home() {
               }
             }
             }
-          />          
-          <AgendaView
-            myEvents={myEvents}
-            date={date}
-            shop={getShop()}
-            customer={selectedCustomer}
-            onChangeDate={(date: Date) => {
-              setDate(date)
-              const events = getEvents()
-              setMyEvents(events)
-            } }
-            onSetEvents={ (props) => { setMyEvents(props) } }
-          />
+          />  
+          <WebsocketProvider>
+            <MyComponent />
+            <AgendaView
+              myEvents={myEvents}
+              date={date}
+              shop={getShop()}
+              customer={selectedCustomer}
+              onChangeDate={(date: Date) => {
+                setDate(date)
+                const events = getEvents()
+                setMyEvents(events)
+              } }
+              onSetEvents={ (props) => { setMyEvents(props) } }
+            />            
+          </WebsocketProvider>          
         </div>
       </div>
     </div>

@@ -22,7 +22,8 @@
     "react-datepicker": "^7.4.0",
     "react-day-picker": "^9.3.0",
     "react-dom": "^18",
-    "react-select": "^5.8.1"
+    "react-select": "^5.8.1",
+    "react-use-websocket": "^4.10.1"
   },
   "devDependencies": {
     "@types/node": "^20",
