@@ -28,6 +28,3 @@ export const WebsocketProvider = ({ children }: IWebsocketProviderProps) => {
     </WebSocketContext.Provider>
   );
 };
-
-// eslint-disable-next-line import/no-anonymous-default-export
-// export default {WebsocketProvider, WebSocketContext}

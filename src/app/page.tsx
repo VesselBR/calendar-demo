@@ -36,7 +36,9 @@ export default function Home() {
                 mode="single"
                 locale={ptBR}
                 selected={date}
-                onSelect={(newvalue) => { setDate(newvalue!) }}
+                onSelect={(newvalue) => { 
+                  setDate(newvalue!) 
+                }}
             />
             <p>Profissionais</p>
             <Select
