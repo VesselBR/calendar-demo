@@ -11,6 +11,8 @@ import { getCustomers, getEvents, getShop, MyEvent } from './fakeData';
 import  MyComponent  from "./MyComponent";
 import { WebsocketProvider } from "./WebsocketProvider";
 import CustomerComponent from "./CustomerComponent";
+import Sidebar from "./Sidebar";
+import DateProvider from "./DateProvider";
 
 
 export default function Home() {
@@ -52,33 +54,9 @@ export default function Home() {
     <div>
       <h1>App Demo</h1>
       <div className="row">
-        <div className="col-sm-2">
-            <DayPicker
-                mode="single"
-                locale={ptBR}
-                selected={date}
-                onSelect={(newvalue) => { 
-                  setDate(newvalue!) 
-                }}
-            />
-            <p>Profissionais</p>
-            <Select
-              isMulti
-              name="staffs"
-              options={[]}
-              className="basic-multi-select"
-              classNamePrefix="select"
-            />
-          <p>Grupos</p>
-          <Select
-            isMulti
-            name="groups"
-            options={[]}
-            className="basic-multi-select"
-            classNamePrefix="select"
-          />
-
-        </div>          
+        <DateProvider>
+          <Sidebar />
+        </DateProvider>          
         <div className="col-sm-10">
         <Select
             isSearchable
