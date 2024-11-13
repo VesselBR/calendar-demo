@@ -10,6 +10,7 @@ import { Customer } from './agenda';
 import { getCustomers, getEvents, getShop, MyEvent } from './fakeData';
 import  MyComponent  from "./MyComponent";
 import { WebsocketProvider } from "./WebsocketProvider";
+import CustomerComponent from "./CustomerComponent";
 
 
 export default function Home() {
@@ -26,6 +27,26 @@ export default function Home() {
     setMyEvents(events)
 
   }, [] )
+
+  let main
+  if (selectedCustomer) {
+    main = <CustomerComponent shopId={'1'} aevents={myEvents} customerId={selectedCustomer} date={date} />
+  } else {
+    main = <AgendaView
+    myEvents={myEvents}
+    date={date}
+    shop={getShop()}
+    customer={selectedCustomer}
+    onChangeDate={(date: Date) => {
+      setDate(date)
+      const events = getEvents()
+      setMyEvents(events)
+    } }
+    onSetEvents={ (props) => { setMyEvents(props) } }
+  />  
+  }
+
+
 
   return (
     <div>
@@ -76,18 +97,7 @@ export default function Home() {
           />  
           <WebsocketProvider>
             <MyComponent />
-            <AgendaView
-              myEvents={myEvents}
-              date={date}
-              shop={getShop()}
-              customer={selectedCustomer}
-              onChangeDate={(date: Date) => {
-                setDate(date)
-                const events = getEvents()
-                setMyEvents(events)
-              } }
-              onSetEvents={ (props) => { setMyEvents(props) } }
-            />            
+            {main}          
           </WebsocketProvider>          
         </div>
       </div>
