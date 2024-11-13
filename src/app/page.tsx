@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { useEffect, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
 import { Customer } from './agenda';
-import { getCustomers, getEvents, MyEvent } from './fakeData';
+import { getCustomers } from './fakeData';
 import { WebsocketProvider } from "./WebsocketProvider";
 import Sidebar from "./Sidebar";
 import DateProvider from "./DateProvider";
@@ -12,7 +12,6 @@ import Main from "./Main";
 
 
 export default function Home() {
-  const [myEvents, setMyEvents] = useState<MyEvent[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
   const [selectedCustomer, setSelectedCustomer] = useState<number | null>(null)
 
@@ -20,9 +19,6 @@ export default function Home() {
   useEffect( () => {
     const customers = getCustomers()
     setCustomers(customers)
-    const events = getEvents()
-    setMyEvents(events)
-
   }, [] )
 
 
@@ -50,8 +46,7 @@ export default function Home() {
           <Sidebar />
           <WebsocketProvider>
             <Main
-              selectedCustomer={selectedCustomer}
-              events={myEvents}
+              selectedCustomer={selectedCustomer}              
               shopId="1"
             />
         </WebsocketProvider>          
