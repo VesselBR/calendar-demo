@@ -1,23 +1,18 @@
 "use client"; // This is a client component
-import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-import { ptBR } from "react-day-picker/locale";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useEffect, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
-import AgendaView from './AgendaView';
 import { Customer } from './agenda';
-import { getCustomers, getEvents, getShop, MyEvent } from './fakeData';
-import  MyComponent  from "./MyComponent";
+import { getCustomers, getEvents, MyEvent } from './fakeData';
 import { WebsocketProvider } from "./WebsocketProvider";
-import CustomerComponent from "./CustomerComponent";
 import Sidebar from "./Sidebar";
 import DateProvider from "./DateProvider";
+import Main from "./Main";
 
 
 export default function Home() {
   const [myEvents, setMyEvents] = useState<MyEvent[]>([])
-  const [date, setDate] = useState  (new Date())
   const [customers, setCustomers] = useState<Customer[]>([])
   const [selectedCustomer, setSelectedCustomer] = useState<number | null>(null)
 
@@ -30,35 +25,11 @@ export default function Home() {
 
   }, [] )
 
-  let main
-  if (selectedCustomer) {
-    main = <CustomerComponent shopId={'1'} aevents={myEvents} customerId={selectedCustomer} date={date} />
-  } else {
-    main = <AgendaView
-    myEvents={myEvents}
-    date={date}
-    shop={getShop()}
-    customer={selectedCustomer}
-    onChangeDate={(date: Date) => {
-      setDate(date)
-      const events = getEvents()
-      setMyEvents(events)
-    } }
-    onSetEvents={ (props) => { setMyEvents(props) } }
-  />  
-  }
-
-
 
   return (
     <div>
       <h1>App Demo</h1>
-      <div className="row">
-        <DateProvider>
-          <Sidebar />
-        </DateProvider>          
-        <div className="col-sm-10">
-        <Select
+      <Select
             isSearchable
             name="customers"
             options={customers}
@@ -73,11 +44,18 @@ export default function Home() {
             }
             }
           />  
+
+      <div className="row">
+        <DateProvider>
+          <Sidebar />
           <WebsocketProvider>
-            <MyComponent />
-            {main}          
-          </WebsocketProvider>          
-        </div>
+            <Main
+              selectedCustomer={selectedCustomer}
+              events={myEvents}
+              shopId="1"
+            />
+        </WebsocketProvider>          
+        </DateProvider>                                          
       </div>
     </div>
   );
