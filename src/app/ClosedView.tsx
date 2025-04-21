@@ -12,7 +12,7 @@ export const ClosedView: ComponentType<any> & ViewStatic = (props :ClosedViewPro
     console.log("props", props)
     return (
     <div>
-        <h1>Unidade fechada neste dia</h1>
+      <h1>Unidade fechada neste dia</h1>
     </div>
   )
 }
