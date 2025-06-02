@@ -56,27 +56,35 @@ export default function Home() {
           </div>
         </div>
         <div className="col-sm-10 col-md-8 col-lg-9">
-          <Select
-            isSearchable
-            name="customers"
-            options={customers}
-            classNamePrefix="select"
-            className="col-sm-12 col-lg-3"
-            isClearable
-            onChange={(newVal: SingleValue<Customer>) => {
-              if (newVal === null) {
-                setSelectedCustomer(null);
-              } else {
-                setSelectedCustomer(newVal.id);
-              }
-            }}
-          />
-          <AgendaView
-            date={date}
-            shop={getShop()}
-            customer={selectedCustomer}
-            onChangeDate={(date: Date) => setDate(date)}
-          />
+          <div>
+            <Select
+              isSearchable
+              name="customers"
+              options={customers}
+              classNamePrefix="select"
+              className="col-sm-12 col-lg-3 z-1"
+              menuPortalTarget={document.body} // renderiza o menu fora do componente pai
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }), // eleva z-index do dropdown
+              }}
+              onChange={(newVal: SingleValue<Customer>) => {
+                if (newVal === null) {
+                  setSelectedCustomer(null);
+                } else {
+                  setSelectedCustomer(newVal.id);
+                }
+              }}
+            
+            />
+          </div>
+          <div>
+            <AgendaView
+              date={date}
+              shop={getShop()}
+              customer={selectedCustomer}
+              onChangeDate={(date: Date) => setDate(date)}
+            />
+          </div>
         </div>
       </div>
     </div>
