@@ -8,6 +8,9 @@ import DatePicker from "react-datepicker";
 import moment from "moment-timezone";
 import "moment/locale/pt-br";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import { registerLocale } from "react-datepicker";
+import {ptBR} from "date-fns/locale";
+registerLocale("pt-BR", ptBR);
 
 export type AddMultipleModalProps = {
   shopId: string;
@@ -113,7 +116,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                             const customer = customers.find(
                               (c) => c.id === customerId
                             );
-                            const event = formValues[0]; 
+                            const event = formValues[0];
                             const staff = staffs.find(
                               (s) => s.id === event?.resourceId
                             );
@@ -222,8 +225,9 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                       showTimeSelect
                       showTimeSelectOnly
                       timeIntervals={30}
-                      timeCaption="Time"
-                      dateFormat="hh:mm"
+                      timeCaption="Horário"
+                      dateFormat="HH:mm"
+                      locale="pt-BR"
                       onChange={(e) => handleChange(index, "start", e)}
                     />
                   </Form.Group>
@@ -238,8 +242,9 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                       showTimeSelect
                       showTimeSelectOnly
                       timeIntervals={30}
-                      timeCaption="Time"
-                      dateFormat="hh:mm"
+                      timeCaption="Horário"
+                      dateFormat="HH:mm"
+                      locale="pt-BR"
                       onChange={(e) => handleChange(index, "end", e)}
                     />
                   </Form.Group>

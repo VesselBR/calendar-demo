@@ -9,7 +9,7 @@ import {
 } from "react-big-calendar";
 import moment from "moment-timezone";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button } from "react-bootstrap";
 import { getEvents, getResources, MyEvent, Shop } from "./fakeData";
 import AddMultipleModal from "./AddMultipleModal";
@@ -38,9 +38,9 @@ export default function AgendaView(props: AgendaViewProps) {
   if (props.customer) viewtype = Views.AGENDA;
   if (customView) viewtype = "customAgenda";
 
-  const DnDCalendar = withDragAndDrop(Calendar);
+  const DnDCalendar = useMemo(()=> withDragAndDrop(Calendar),[]); 
   moment.tz.setDefault("America/Sao_Paulo");
-  const localizer = momentLocalizer(moment);
+  const localizer = useMemo(() => momentLocalizer(moment), []); 
 
   useEffect(() => {
     const events = getEvents();
@@ -110,8 +110,8 @@ export default function AgendaView(props: AgendaViewProps) {
               if (!resource) return;
               const start_at = slotInfo.slots[0]!;
               const end_at = slotInfo.slots.at(-1)!;
-              setMyEvents([
-                ...myEvents,
+               setMyEvents((prevEvents) => [
+                ...prevEvents,
                 {
                   id: Math.floor(Math.random() * 100),
                   title: "RESERVA",
