@@ -9,7 +9,7 @@ import moment from "moment-timezone";
 import "moment/locale/pt-br";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { registerLocale } from "react-datepicker";
-import {ptBR} from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
 registerLocale("pt-BR", ptBR);
 
 export type AddMultipleModalProps = {
@@ -42,6 +42,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
           start: event.start,
           end: event.end,
           resourceId: event.resourceId,
+          noPreference: event.noPreference,
         };
       });
       //@ts-expect-error IgnoreIt
@@ -60,7 +61,11 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
     if (attribute === "resourceId") {
       newFormValues[index][attribute] = parseInt(value);
     }
+    if (attribute === "noPreference") {
+      newFormValues[index][attribute] = value;
+    }
     setFormValues(newFormValues);
+    console.log(formValues, "testando o value");
   };
 
   const addFormFields = () => {
@@ -74,6 +79,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
         serviceId: 0,
         id: 0,
         title: "",
+        noPreference: false,
       },
     ]);
   };
@@ -101,10 +107,10 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
               <Container>
                 <Row>
                   <Col sm={8}>
-                    <Form.Label className="row justify-content-between align-items-center ">
-                      Cliente
+                    <Form.Label className="row justify-content-start align-items-center ">
+                      <div className="col-sm-2">Cliente</div>
                       <a
-                        className="btn bg-success text-light col-5"
+                        className="btn bg-success text-light col-8 col-md-5 "
                         target="_blank"
                         rel="noopener noreferrer"
                         href={`https://wa.me/55${
@@ -162,10 +168,11 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
 
             <Form.Label>Horários:</Form.Label>
             {formValues.map((element, index) => (
-              <Form key={index} className="d-flex">
-                <Form.Group>
+              <Form key={index} className="row justify-content-start my-2 ">
+                <Form.Group className="col-sm-3  ">
                   <Form.Label>Proffissional</Form.Label>
                   <Form.Select
+                    className="col-sm-5"
                     value={element.resourceId}
                     id={`staff-${index}`}
                     onChange={(event) => {
@@ -183,8 +190,25 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                       );
                     })}
                   </Form.Select>
+                  <Form.Group className="row justify-content-between col-sm-12 mt-2">
+                    <Form.Check
+                      type="checkbox"
+                      className="col-sm-1"
+                      checked={element.noPreference || false} // Controla o estado visual
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
+                        handleChange(
+                          index,
+                          "noPreference",
+                          event.target.checked
+                        ); // Passa o booleano
+                      }}
+                    />
+                    <Form.Label className="col-10">Sem Preferência</Form.Label>
+                  </Form.Group>
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="col-sm-3  ">
                   <Form.Label>Serviço</Form.Label>
                   <Form.Select
                     value={element.serviceId}
@@ -215,12 +239,12 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                   ></Form.Select>
                 </Form.Group>
 
-                <Form.Group>
+                <Form.Group className="col-sm-2 col-4 ">
                   <Form.Label>Inicio</Form.Label>
                   <Form.Group>
                     <DatePicker
                       id={`start-${index}`}
-                      className="form-control"
+                      className="form-control "
                       selected={element.start!}
                       showTimeSelect
                       showTimeSelectOnly
@@ -232,7 +256,7 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                     />
                   </Form.Group>
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="col-sm-2 col-4 ">
                   <Form.Label>Fim</Form.Label>
                   <Form.Group>
                     <DatePicker
@@ -249,13 +273,16 @@ const AddMultipleModal = (props: AddMultipleModalProps) => {
                     />
                   </Form.Group>
                 </Form.Group>
-                <Button
-                  type="button"
-                  className="button"
-                  onClick={() => removeFormFields(index)}
-                >
-                  Remover
-                </Button>
+                <div className="col-sm-2 mt-4 ">
+                  <Button
+                    type="button"
+                    className="button"
+                    onClick={() => removeFormFields(index)}
+                  >
+                    Remover
+                  </Button>
+                </div>
+                <hr />
               </Form>
             ))}
 

@@ -13,6 +13,7 @@ export type MyEvent = {
   serviceId: number;
   start: Date;
   end: Date;
+  noPreference:boolean;
 };
 
 export type WorkingHours = {
@@ -78,7 +79,7 @@ export const getCustomerEvents = (customerId: number): MyEvent[] => {
 
 export const getServices = (): Service[] => {
   const list: Service[] = [];
-  for (let index = 1; index < 5; index++) {
+  for (let index = 1; index < 15; index++) {
     list.push({
       id: index,
       name: `Serviço ${index}`,
@@ -89,7 +90,7 @@ export const getServices = (): Service[] => {
 
 export const getCustomers = (): Customer[] => {
   const customers: Customer[] = [];
-  for (let index = 1; index < 5; index++) {
+  for (let index = 1; index < 15; index++) {
     customers.push({
       id: index,
       value: index,
