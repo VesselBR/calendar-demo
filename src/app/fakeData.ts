@@ -34,24 +34,26 @@ function getRandomInt(min :number, max :number) :number {
   }
 
 
-export const getResources = () :Resource[] => {
+export const getResources = (page: number, pageSize: number) :Resource[] => {
     const resources :Resource[] = []
-    for (let index = 1; index <= 5; index++) {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    for (let index = 1; index <= 50; index++) {
         resources.push({
             id: index,
             title: `Profissional ${index}`
         })
     }
-    return resources
+    return resources.slice(start, end);
 }
 
 export const getEvents = () :MyEvent[] => {
     const events :MyEvent[] = []
-    for (let index = 1; index < 10; index++) {
+    for (let index = 1; index < 150; index++) {
         events.push({
             id: index,
             title: `Evento ${index}`,
-            resourceId: getRandomInt(1, 5),
+            resourceId: getRandomInt(1, 50),
             serviceId:  getRandomInt(1, 5),
             customerId: getRandomInt(1, 5),
             start: new Date( new Date().setHours(getRandomInt(8, 12)) ),
@@ -67,7 +69,7 @@ export const getCustomerEvents = (customerId: number) :MyEvent[] => {
         events.push({
             id: index,
             title: `Evento ${index}`,
-            resourceId: getRandomInt(1, 5),
+            resourceId: getRandomInt(1, 50),
             serviceId:  getRandomInt(1, 5),
             customerId: customerId,
             start: new Date( new Date().setHours(getRandomInt(8, 12)) ),

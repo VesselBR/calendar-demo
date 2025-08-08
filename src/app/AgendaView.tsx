@@ -5,7 +5,7 @@ import moment from 'moment-timezone'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
-import { getEvents, getResources, MyEvent, Shop } from './fakeData'
+import { getEvents, getResources, MyEvent, Resource, Shop } from './fakeData'
 import AddMultipleModal from './AddMultipleModal'
 import { createCustomComponent } from './CustomerView'
 export type AgendaViewProps = {
@@ -19,13 +19,14 @@ export type AgendaViewProps = {
 export default function AgendaView(props: AgendaViewProps) {
     const [myEvents, setMyEvents] = useState<MyEvent[]>([])
     const [openSlot, setOpenSlot] = useState(false)
-    //const [viewtype, setViewtype] = useState<View>(Views.DAY)
+    const [resources, setResources] = useState<Resource[]>([]);
+    const [page, setPage] = useState(1);
+    const pageSize = 10;
 
     const isOpen = props.shop.hours[props.date.getDay()].open
     const startHour = props.shop.hours[props.date.getDay()].start 
     const endHour = props.shop.hours[props.date.getDay()].end
 
-    const resourceMap = getResources()
     let viewtype: View = Views.DAY
     if (props.customer) { viewtype = Views.AGENDA } 
 
@@ -36,7 +37,12 @@ export default function AgendaView(props: AgendaViewProps) {
     useEffect( () => {
         const events = getEvents()
         setMyEvents(events)
+        setResources(getResources(page, pageSize));
     }, [] )
+
+    useEffect(() => {
+        setResources(getResources(page, pageSize));
+      }, [page]);
 
 
     const DnDCalendar = withDragAndDrop(Calendar)
@@ -63,7 +69,13 @@ export default function AgendaView(props: AgendaViewProps) {
                 }
             }>
             Gravar
-            </Button>            
+            </Button>
+            <Button onClick={() => setPage(page - 1)} disabled={page === 1}>
+                Anterior
+            </Button>
+            <Button onClick={() => setPage(page + 1)} >
+                Próximo
+            </Button>
         </div>
 
         {
@@ -75,7 +87,7 @@ export default function AgendaView(props: AgendaViewProps) {
             defaultView={viewtype}
             localizer={localizer}
             events={myEvents}
-            resources={resourceMap}
+            resources={resources}
             views={{ day: true, agenda: customerView    }  }
             min={new Date(new Date().setHours(startHour, 0, 0))}
             max={new Date(new Date().setHours(endHour, 0, 0))}            
@@ -96,7 +108,7 @@ export default function AgendaView(props: AgendaViewProps) {
              }}
             onSelectSlot={ (event: SlotInfo) => {
                 console.log("On Select slot", event)
-                const resource = resourceMap.find(item => item.id === event.resourceId)
+                const resource = resources.find(item => item.id === event.resourceId)
                 if(!resource) {return}
                 const resourceId = resource.id
                 //const resourceName = `${resource.id} - ${resource.title}`
